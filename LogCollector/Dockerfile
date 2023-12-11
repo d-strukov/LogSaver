@@ -9,17 +9,26 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["LogCollector/LogCollector.csproj", "LogCollector/"]
-RUN dotnet restore "./LogCollector/./LogCollector.csproj"
-COPY . .
+COPY ["LogCollector/LogCollectorAPI.csproj", "LogCollector/"]
+COPY ["LogCollectorDOL/LogCollectorDOL.csproj", "LogCollectorDOL/"]
+
+RUN dotnet restore "./LogCollectorDOL/./LogCollectorDOL.csproj"
+RUN dotnet restore "./LogCollector/./LogCollectorAPI.csproj"
+
+COPY LogCollector/. ./LogCollector
+COPY LogCollectorDOL/. ./LogCollectorDOL
+
+WORKDIR "/src/LogCollectorDOL"
+RUN dotnet build "./LogCollectorDOL.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
 WORKDIR "/src/LogCollector"
-RUN dotnet build "./LogCollector.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./LogCollectorAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./LogCollector.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./LogCollectorAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "LogCollector.dll"]
+ENTRYPOINT ["dotnet", "LogCollectorAPI.dll"]

@@ -23,9 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="SwaggerDocs.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+   
   </ItemGroup>
 
 </Project>

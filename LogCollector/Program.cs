@@ -36,4 +36,7 @@ app.AddLogCollectorApi();
 app.Run();
 
 // For testing purposes only
+/// <summary>
+/// Please ignore
+/// </summary>
 public partial class Program { }

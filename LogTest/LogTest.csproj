@@ -37,4 +37,10 @@
     <ProjectReference Include="..\LogCollector\LogCollectorAPI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="SwaggerDocs.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
