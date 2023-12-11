@@ -1,0 +1,6 @@
+@LogCollector_HostAddress = http://localhost:5220
+
+GET {{LogCollector_HostAddress}}/logs/
+Accept: application/json
+
+###

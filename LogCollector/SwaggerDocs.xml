@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LogCollectorAPI</name>
+    </assembly>
+    <members>
+        <member name="T:LogCollectorAPI.API">
+            <summary>
+            Log Collector API
+            </summary>
+        </member>
+        <member name="M:LogCollectorAPI.API.AddLogCollectorApi(Microsoft.AspNetCore.Builder.WebApplication)">
+            <summary>
+             Adds the log collector endpoint to the web application
+            </summary>
+        </member>
+        <member name="T:LogCollector.Model.LogMessageModel">
+            <summary>
+            Model for the communication with the Log Collector API
+            </summary>
+        </member>
+        <member name="P:LogCollector.Model.LogMessageModel.timestamp">
+            <summary>
+            Unix Timestamp (seconds)
+            </summary>
+        </member>
+        <member name="P:LogCollector.Model.LogMessageModel.application">
+            <summary>
+            Application Name
+            </summary>
+        </member>
+        <member name="P:LogCollector.Model.LogMessageModel.message">
+            <summary>
+            Log message. e.g. [debug] This is a test message
+            </summary>
+        </member>
+    </members>
+</doc>
