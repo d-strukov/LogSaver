@@ -26,16 +26,6 @@ services:
       - proxynet
     depends_on: 
       - postgres_db
-  pgadmin:
-     image: dpage/pgadmin4
-     restart: always
-     environment:
-        - PGADMIN_DEFAULT_EMAIL=user@domain.com
-        - PGADMIN_DEFAULT_PASSWORD=SuperSecret
-     ports:
-        - '80:80'
-     depends_on:
-        - postgres_db
 volumes:
     postgres_db:
         driver: local
