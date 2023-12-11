@@ -26,7 +26,7 @@ namespace LogCollectorAPI
             {
 
                 var log = loggerFactory.CreateLogger<LogMessageModel>();
-
+               // log.LogInformation("Received: " + arr.Length);
                 try
                 {
                     await Parallel.ForEachAsync(arr, async (a, ct) =>
@@ -113,7 +113,7 @@ namespace LogCollectorAPI
                                 {
                                     //unable to parse
                                     // staying with a defautl log level and message values
-                                    log.LogWarning($"Unambe to parse the log level: [{match.Groups[1].Value.Trim()}]");
+                                    log.LogWarning($"Unable to parse the log level: [{match.Groups[1].Value.Trim()}]");
 
                                 }
                             }
@@ -131,6 +131,7 @@ namespace LogCollectorAPI
                 }
                 catch (Exception ex)
                 {
+                    log.LogError("Something went wrong :"  +ex.Message);
                     return Results.Problem(ex.Message);
                 }
 

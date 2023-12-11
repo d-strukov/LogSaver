@@ -27,28 +27,30 @@ namespace LogTest
         [SetUp]
         public async Task Setup()
         {
+            Console.WriteLine("Total in DB from previous run: " + _db.GetAll<LogMessage>().Result.Count() + " Clearing All");
+
             await _db.DeleteAll<LogMessage>();
             await _db.DeleteAll<Application>();
 
-            var app = new Application()
-            {
-                name = "test"
-            };
+            //var app = new Application()
+            //{
+            //    name = "test"
+            //};
 
-            var appId = await _db.Insert<Application>(app);
+            //var appId = await _db.Insert<Application>(app);
 
-            Console.WriteLine(appId);
+            //Console.WriteLine(appId);
 
-            for (var i = 0; i < 10; i++)
-            {
-                await _db.InsertLog(new LogMessage()
-                {
-                    application_id = appId,
-                    log_level = LogCollector.Model.LogLevel.error,
-                    message = "test1Message",
-                    date = DateTime.UtcNow
-                });
-            }
+            //for (var i = 0; i < 10; i++)
+            //{
+            //    await _db.InsertLog(new LogMessage()
+            //    {
+            //        application_id = appId,
+            //        log_level = LogCollector.Model.LogLevel.error,
+            //        message = "test1Message",
+            //        date = DateTime.UtcNow
+            //    });
+            //}
 
         }
 
@@ -182,7 +184,26 @@ s the message from above",
             sw.Start();
             var res = await client.PostAsync("logs/LogMessage", content);
             sw.Stop();
-            Console.WriteLine(sw.ElapsedMilliseconds);
+            Console.WriteLine("1x1500 : " +sw.ElapsedMilliseconds);
+
+            Console.WriteLine("Total in DB: " + _db.GetAll<LogMessage>().Result.Count());
+
+            sw.Restart();
+             Parallel.For(0, 1500,  (i, ct) =>
+            {
+                var part = input[(i * 1)..(i * 1 + 1)];
+                content = JsonContent.Create(part);
+                res = client.PostAsync("logs/LogMessage", content).Result;
+            });
+
+            
+            sw.Stop();
+            Console.WriteLine("1500x1 : " +sw.ElapsedMilliseconds);
+            var count = _db.GetAll<LogMessage>().Result.Count();
+            Console.WriteLine("Total in DB: " + count);
+
+            Assert.True(count == input.Length*2);
+
 
         }
     }

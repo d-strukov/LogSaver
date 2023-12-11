@@ -29,31 +29,39 @@ namespace LogCollector.Context
 
         public async Task<IEnumerable<T>> GetAll<T>() where T : class
         {
-            return await CreateConnection().GetAllAsync<T>();
+            using var c = CreateConnection();
+            return await c.GetAllAsync<T>();
 
         }
 
         public async Task<bool> DeleteAll<T>() where T : class
         {
-            return await CreateConnection().DeleteAllAsync<T>();
+            using var c = CreateConnection();
+            return await c.DeleteAllAsync<T>();
 
         }
 
         public async Task<int> Insert<T>(T item) where T : class
         {
-            return await CreateConnection().InsertAsync<T>(item);
+
+            using var c = CreateConnection();
+            return await c.InsertAsync<T>(item);
 
         }
 
         public async Task<IEnumerable<int?>> GetApplicationByName(string name)
         {
-            return await CreateConnection().QueryAsync<int?>("select id from application where name like @name", new {name = name});
+
+            using var c = CreateConnection();
+            return await c.QueryAsync<int?>("select id from application where name like @name", new {name = name});
 
         }
 
         public async Task<int> InsertLog(LogMessage item)
         {
-            return await CreateConnection().ExecuteAsync($"INSERT INTO public.logmessage( application_id, date, message, log_level) VALUES ( @appid, @date, @message, cast(@loglevel  as loglevel)); ", new { appid = item.application_id, date = item.date, message=item.message, loglevel=item.log_level.ToString() });
+
+            using var c = CreateConnection();
+            return await c.ExecuteAsync($"INSERT INTO public.logmessage( application_id, date, message, log_level) VALUES ( @appid, @date, @message, cast(@loglevel  as loglevel)); ", new { appid = item.application_id, date = item.date, message=item.message, loglevel=item.log_level.ToString() });
 
         }
 
